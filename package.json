@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/jordansafer/covid19-graphs#readme",
   "dependencies": {
-    "covid-usa": "^1.2.2"
+    "covid-usa": "^1.2.2",
+    "express": "^4.17.1"
   }
 }
