@@ -10,5 +10,8 @@ div
             option(value=state) #{state}
 div
     canvas#myChart(width="400" height="400")
+    script.
+        init(!{JSON.stringify(dates)}, 
+             !{JSON.stringify(countiesByState)},
+             !{JSON.stringify(allStateData)})
     
-

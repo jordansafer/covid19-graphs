@@ -14,12 +14,24 @@ const server = app.listen(port, () => {
 app.set("view engine", "pug")
 
 app.get("/", (req, res) => {
-    data.states(states => {
-        data.dates(dates => {
-            res.render("index", {
-                states: states,
-                dates: [dates]
-            })
+    const statePromise = new Promise(resolve => data.states(states => {
+        templateData.states = states
+        console.log(`states: ${dates.length}`)
+        resolve(states)
+    }))
+    const countyPromise = new Promise(resolve => {
+        data.countiesByState(countiesByState => {
+            templateData.countiesByState = countiesByState
+            resolve()
         })
+    })
+    const datePromise = new Promise(resolve => data.allStateData(allStateData => {
+        templateData.dates = Object.keys(allStateData)
+        templateData.allStateData = allStateData
+        console.log(`dates: ${dates.length}`)
+        resolve()
+    }))
+    Promise.all([statePromise, countyPromise, datePromise]).then(() => {
+        res.render("index", templateData)
     })
 })
