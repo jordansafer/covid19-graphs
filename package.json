@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,10 @@
   },
   "homepage": "https://github.com/jordansafer/covid19-graphs#readme",
   "dependencies": {
-    "covid-usa": "^1.2.2",
+    "chart.js": "^2.9.3",
+    "covid-usa": "^2.0.1",
     "express": "^4.17.1",
+    "lodash": "^4.17.15",
     "pug": "^2.0.4"
   }
 }
