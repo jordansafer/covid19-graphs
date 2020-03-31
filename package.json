@@ -2,10 +2,10 @@
   "name": "covid19-graphs",
   "version": "1.0.0",
   "description": "graphs of covid19",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js"
+    "start": "node src/app.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "covid-usa": "^2.0.1",
     "express": "^4.17.1",
     "lodash": "^4.17.15",
+    "parcel-bundler": "^1.12.4",
     "pug": "^2.0.4"
   }
 }
