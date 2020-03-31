@@ -4,7 +4,8 @@
   "description": "graphs of covid19",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx node index.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/jordansafer/covid19-graphs#readme",
   "dependencies": {
     "covid-usa": "^1.2.2",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "pug": "^2.0.4"
   }
 }
