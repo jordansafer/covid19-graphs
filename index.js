@@ -1,7 +1,9 @@
 const express = require("express")
 const app = express()
 
-const server = app.listen(443, () => {
+const port = process.env.PORT || 3000
+
+const server = app.listen(port, () => {
   console.log(`Port: ${server.address().port}`);
 })
 
