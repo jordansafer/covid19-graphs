@@ -8,5 +8,7 @@ const server = app.listen(443, () => {
 app.set("view engine", "pug")
 
 app.get("/", (req, res) => {
-  res.render("index")
+  res.render("index", {
+    first: "test"
+  })
 })
