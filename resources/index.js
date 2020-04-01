@@ -1,5 +1,17 @@
 
-var chart = null
+var charts = {}
+
+function init(dates, countiesByState, allStateData) {
+    Chart.platform.disableCSSInjection = true
+    $("#chooseState").on("change", () => {
+        const state = $( "#chooseState option:selected" ).val()
+        if (state === "") {
+            return // No change if default chosen
+        }
+        refreshChart(state, allStateData, countiesByState, dates, "cases")
+        refreshChart(state, allStateData, countiesByState, dates, "deaths")
+    })
+}
 
 function singleStateData(state, allStateData) {
     const stateData = {}
@@ -10,14 +22,14 @@ function singleStateData(state, allStateData) {
     return stateData
 }
 
-function countyCases(counties, dates, stateData) {
+function countyStats(counties, dates, stateData, statType) {
     const datasets = []
     for (const county of counties) {
         const data = []
         for (const date of dates) {
             const countyData = stateData[date][county] || {}
-            const cases = countyData.cases || 0
-            data.push(cases)
+            const stat = countyData[statType] || 0
+            data.push(stat)
         }
         datasets.push({
             label: county,
@@ -40,58 +52,50 @@ function getRandomColor() {
     return color;
 }
 
-function init(dates, countiesByState, allStateData) {
-    Chart.platform.disableCSSInjection = true
-    var ctx = document.getElementById("myChart")
-    $("#chooseState").on("change", () => {
-        const state = $( "#chooseState option:selected" ).val()
-        if (state === "") {
-            return // No change if default chosen
-        }
-        if (chart) {
-            chart.destroy()
-            chart = null
-        }
-        const stateData = singleStateData(state, allStateData)
-        const counties = countiesByState[state].sort()
-        const datasets = countyCases(counties, dates, stateData)
-        chart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: dates,
-                datasets: datasets
+function refreshChart(state, allStateData, countiesByState, dates, statType) {
+    const ctx = document.getElementById(statType)
+    if (charts[statType]) {
+        charts[statType].destroy()
+        charts[statType] = null
+    }
+    const stateData = singleStateData(state, allStateData)
+    const counties = countiesByState[state].sort()
+    const datasets = countyStats(counties, dates, stateData, statType)
+    charts[statType] = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: dates,
+            datasets: datasets
+        },
+        options: {
+            title: {
+                display: true,
+                text: `Covid19 ${statType} by county in ${state}`
             },
-            options: {
-                responsive: false,
-                title: {
+            tooltips: {
+                mode: "index",
+                intersect: false,
+            },
+            hover: {
+                mode: "nearest",
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
                     display: true,
-                    text: `Covid19 Cases by County in ${state}`
-                },
-                tooltips: {
-                    mode: "index",
-                    intersect: false,
-                },
-                hover: {
-                    mode: "nearest",
-                    intersect: true
-                },
-                scales: {
-                    xAxes: [{
+                    scaleLabel: {
                         display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Date"
-                        }
-                    }],
-                    yAxes: [{
+                        labelString: "Date"
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
                         display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Cases"
-                        }
-                    }]
-                }
+                        labelString: statType
+                    }
+                }]
             }
-        })
+        }
     })
 }

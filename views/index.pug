@@ -9,9 +9,11 @@ div
         each state in states
             option(value=state) #{state}
 div
-    canvas#myChart(width="1000" height="600")
-    script.
-        init(!{JSON.stringify(dates)}, 
-             !{JSON.stringify(countiesByState)},
-             !{JSON.stringify(allStateData)})
+    canvas#cases(width="600" height="200")
+div
+    canvas#deaths(width="600" height="200")
+script.
+    init(!{JSON.stringify(dates)}, 
+         !{JSON.stringify(countiesByState)},
+         !{JSON.stringify(allStateData)})
     
