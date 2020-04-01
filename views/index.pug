@@ -4,12 +4,12 @@ script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js")
 script(src="resources/index.js")
 div
     p Covid19 Graphs site
-    select
+    select#chooseState
         option(value="") Choose a state
         each state in states
             option(value=state) #{state}
 div
-    canvas#myChart(width="400" height="400")
+    canvas#myChart(width="1000" height="600")
     script.
         init(!{JSON.stringify(dates)}, 
              !{JSON.stringify(countiesByState)},

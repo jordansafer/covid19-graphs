@@ -1,0 +1,18 @@
+env:
+  browser: true
+  commonjs: true
+  es6: true
+  node: true
+extends: 'eslint:recommended'
+globals:
+  Atomics: readonly
+  SharedArrayBuffer: readonly
+  $: readonly
+  Chart: readonly
+parserOptions:
+  ecmaVersion: 2018
+rules:
+  quotes: ["error", "double"]
+  indent: ["error", 4]
+  no-shadow: error
+  camelcase: ["error", {"properties": "never"}]
