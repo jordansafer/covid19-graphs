@@ -1,4 +1,5 @@
 
+var chart = null
 
 function singleStateData(state, allStateData) {
     const stateData = {}
@@ -20,24 +21,41 @@ function countyCases(counties, dates, stateData) {
         }
         datasets.push({
             label: county,
-            data: data
+            data: data,
+            backgroundColor: getRandomColor(),
+            borderColor: getRandomColor(),
+            fill: false
         })
     }
     return datasets
 }
 
+// https://stackoverflow.com/questions/25594478/different-color-for-each-bar-in-a-bar-chart-chartjs
+function getRandomColor() {
+    var letters = "0123456789ABCDEF".split("");
+    var color = "#";
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 function init(dates, countiesByState, allStateData) {
-    Chart.platform.disableCSSInjection = true;
-    var ctx = document.getElementById("myChart");
+    Chart.platform.disableCSSInjection = true
+    var ctx = document.getElementById("myChart")
     $("#chooseState").on("change", () => {
-        const state = $( "#chooseState option:selected" ).val();
+        const state = $( "#chooseState option:selected" ).val()
         if (state === "") {
             return // No change if default chosen
         }
+        if (chart) {
+            chart.destroy()
+            chart = null
+        }
         const stateData = singleStateData(state, allStateData)
-        const counties = countiesByState[state]
+        const counties = countiesByState[state].sort()
         const datasets = countyCases(counties, dates, stateData)
-        new Chart(ctx, {
+        chart = new Chart(ctx, {
             type: "line",
             data: {
                 labels: dates,
@@ -76,40 +94,4 @@ function init(dates, countiesByState, allStateData) {
             }
         })
     })
-    /*new Chart(ctx, { // TODO delete this chart
-        type: "bar",
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: "# of Votes",
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    "rgba(255, 99, 132, 0.2)",
-                    "rgba(54, 162, 235, 0.2)",
-                    "rgba(255, 206, 86, 0.2)",
-                    "rgba(75, 192, 192, 0.2)",
-                    "rgba(153, 102, 255, 0.2)",
-                    "rgba(255, 159, 64, 0.2)"
-                ],
-                borderColor: [
-                    "rgba(255, 99, 132, 1)",
-                    "rgba(54, 162, 235, 1)",
-                    "rgba(255, 206, 86, 1)",
-                    "rgba(75, 192, 192, 1)",
-                    "rgba(153, 102, 255, 1)",
-                    "rgba(255, 159, 64, 1)"
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    })*/
 }

@@ -16,7 +16,7 @@ app.set("view engine", "pug")
 app.get("/", (req, res) => {
     const templateData = {}
     const statePromise = new Promise(resolve => data.states(states => {
-        templateData.states = states
+        templateData.states = states.sort()
         console.log(`states: ${states.length}`)
         resolve(states)
     }))
