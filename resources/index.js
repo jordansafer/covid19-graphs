@@ -31,11 +31,12 @@ function countyStats(counties, dates, stateData, statType) {
             const stat = countyData[statType] || 0
             data.push(stat)
         }
+        const color = getRandomColor()
         datasets.push({
             label: county,
             data: data,
-            backgroundColor: getRandomColor(),
-            borderColor: getRandomColor(),
+            backgroundColor: color,
+            borderColor: color,
             fill: false
         })
     }
@@ -73,7 +74,7 @@ function refreshChart(state, allStateData, countiesByState, dates, statType) {
                 text: `Covid19 ${statType} by county in ${state}`
             },
             tooltips: {
-                mode: "index",
+                mode: "point",
                 intersect: false,
             },
             hover: {

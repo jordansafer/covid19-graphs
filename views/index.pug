@@ -9,9 +9,9 @@ div
         each state in states
             option(value=state) #{state}
 div
-    canvas#cases(width="600" height="200")
+    canvas#cases(width="600" height="300")
 div
-    canvas#deaths(width="600" height="200")
+    canvas#deaths(width="600" height="300")
 script.
     init(!{JSON.stringify(dates)}, 
          !{JSON.stringify(countiesByState)},
