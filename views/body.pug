@@ -1,0 +1,29 @@
+div
+    div.flex-col
+        h1 Covid19 Graphs site
+    div.flex-row
+        div
+            select#chooseState.browser-default.custom-select
+                option(value="") Choose a state
+                each state in states
+                    option(value=state) #{state}
+        div(class="custom-control custom-switch")
+            input#isStacked(class="custom-control-input" type="checkbox")
+            label(class="custom-control-label" for="isStacked") Stack Chart Lines
+        div
+            button.btn.btn-primary.btn-sm#selectAll(type="button") Select All Counties
+        div
+            button.btn.btn-primary.btn-sm#unselectAll(type="button") Unselect All Counties
+    div.flex-col
+        div
+            canvas#cases(width="600" height="300")
+        div
+            canvas#deaths(width="600" height="300")
+script.
+    $( window ).on( "load", () => {
+        initializeCovidGraphs(
+            !{JSON.stringify(dates)}, 
+            !{JSON.stringify(countiesByState)},
+            !{JSON.stringify(allStateData)}
+        )
+    })

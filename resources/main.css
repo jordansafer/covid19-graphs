@@ -1,0 +1,15 @@
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row > div, .flex-col > h1, .flex-col > div {
+  margin: 20px;
+}
+

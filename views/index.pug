@@ -1,19 +1,8 @@
-link(rel="stylesheet" type="text/css" href="node_modules/chart.js/dist/Chart.min.css")
-script(src="node_modules/chart.js/dist/Chart.min.js")
-script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js")
-script(src="resources/index.js")
-div
-    p Covid19 Graphs site
-    select#chooseState
-        option(value="") Choose a state
-        each state in states
-            option(value=state) #{state}
-div
-    canvas#cases(width="600" height="300")
-div
-    canvas#deaths(width="600" height="300")
-script.
-    init(!{JSON.stringify(dates)}, 
-         !{JSON.stringify(countiesByState)},
-         !{JSON.stringify(allStateData)})
+doctype html
+html
+    include head.pug
+    body
+        include body.pug
+        include footer.pug
+
     

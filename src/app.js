@@ -4,7 +4,6 @@ const app = express()
 
 const port = process.env.PORT || 3000
 
-app.use("/node_modules", express.static(__dirname + "/../node_modules"));
 app.use("/resources", express.static(__dirname + "/../resources"));
 
 const server = app.listen(port, () => {
