@@ -8,8 +8,11 @@ div
                 each state in states
                     option(value=state) #{state}
         div(class="custom-control custom-switch")
+            input#isCumulative(class="custom-control-input" type="checkbox")
+            label(class="custom-control-label" for="isCumulative") Cumulative
+        div(class="custom-control custom-switch")
             input#isStacked(class="custom-control-input" type="checkbox")
-            label(class="custom-control-label" for="isStacked") Stack Chart Lines
+            label(class="custom-control-label" for="isStacked") Stacked
         div
             button.btn.btn-primary.btn-sm#selectAll(type="button") Select All Counties
         div

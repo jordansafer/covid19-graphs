@@ -4,7 +4,10 @@ var charts = {}
 
 function initializeCovidGraphs(dates, countiesByState, allStateData) {
     Chart.platform.disableCSSInjection = true
-    const refreshChartsFn = () => {
+
+    $("#chooseState").on("change", () => {
+        $( "#isCumulative" ).prop( "checked", true )
+        $( "#isStacked" ).prop( "checked", false )
         const state = $( "#chooseState option:selected" ).val()
         if (state === "") {
             return // No change if default chosen
@@ -13,24 +16,45 @@ function initializeCovidGraphs(dates, countiesByState, allStateData) {
         const colors = Array(counties.length).fill().map(getRandomColor)
         refreshChart(state, allStateData, counties, dates, "cases", colors)
         refreshChart(state, allStateData, counties, dates, "deaths", colors)
-    }
+    })
 
-    $("#chooseState").on("change", refreshChartsFn)
-    $("#isStacked").on("change", refreshChartsFn)
+    $("#isStacked").on("change", () => {
+        Object.values(charts).forEach(chart => {
+            chart.options.scales.yAxes[0].stacked = $("#isStacked").is(":checked")
+            chart.update()
+        })
+    })
 
     function hideDatasets (hidden) {
         Object.values(charts).forEach(chart => {
             chart.data.datasets.forEach(ds => {
-                ds.hidden = hidden;
+                ds.hidden = hidden
             })
             chart.update()
         })
     }
 
     $("#selectAll").click(() => hideDatasets(false))
-    $("#unselectAll").click(() => {
-        console.log("hi test")
-        hideDatasets(true)
+    $("#unselectAll").click(() => hideDatasets(true))
+
+    function toggleAggregation (cumulative) {
+        Object.values(charts).forEach(chart => {
+            chart.data.datasets.forEach(ds => {
+                const oldData = ds.data.slice()
+                for (var i = 1; i < oldData.length; i++) {
+                    if (cumulative) {
+                        ds.data[i] = oldData[i] + ds.data[i - 1]
+                    } else {
+                        ds.data[i] = oldData[i] - oldData[i - 1]
+                    }
+                }
+            })
+            chart.update()
+        })
+    }
+
+    $("#isCumulative").on("change", () => {
+        toggleAggregation($("#isCumulative").is(":checked"))
     })
 }
 
@@ -109,8 +133,7 @@ function refreshChart(state, allStateData, counties, dates, statType, colors) {
                         labelString: "Date"
                     }
                 }],
-                yAxes: [{
-                    stacked: $("#isStacked").is(":checked"), 
+                yAxes: [{ 
                     display: true,
                     scaleLabel: {
                         display: true,
