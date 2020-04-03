@@ -9,7 +9,7 @@
   flex-direction: column;
 }
 
-.flex-row > div, .flex-col > h1, .flex-col > div {
+.flex-row > div, .flex-col > div {
   margin: 20px;
 }
 
