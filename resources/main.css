@@ -7,9 +7,50 @@
 .flex-col {
   display: flex;
   flex-direction: column;
+  margin-bottom: 4vh;
 }
 
-.flex-row > div, .flex-col > div {
-  margin: 20px;
+.bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
 }
 
+.flex-col > *, .flex-row > * {
+  margin: 0vw 2vw;
+}
+
+.pageHeading {
+  margin-top: 4vh;
+}
+
+#error {
+  color: red;
+  display: none;
+}
+
+.chart {
+    width: 90vw;
+    height: 45vw;
+    padding: 2vw;
+    display: none;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.fill-page {
+  flex: 1;
+}
+
+footer {
+    background-color: lightgray;
+    height: 80px;
+    width: 100%;
+}

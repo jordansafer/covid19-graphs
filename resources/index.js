@@ -1,28 +1,41 @@
 
 var charts = {}
 
+function showError(text) {
+    $("#error").text(text)
+    $("#error").show()
+}
 
-function initializeCovidGraphs(dates, countiesByState, allStateData) {
+function initializeCovidGraphs(dates, countiesByState, allStateData, states) {
     Chart.platform.disableCSSInjection = true
+
+    if (!states.length) {
+        showError("No states loaded, try refreshing page")
+    }
+
+    // Create state vs state charts for SVS view
+    if ( $( "#svs" ).length ) {
+        $( "#isCumulative" ).prop( "checked", true )
+        const colors = Array(states.length).fill().map(getRandomColor)
+        refreshStateChart(allStateData, states, dates, "cases", colors)
+        refreshStateChart(allStateData, states, dates, "deaths", colors)
+        $(".chart").show()
+    }
 
     $("#chooseState").on("change", () => {
         $( "#isCumulative" ).prop( "checked", true )
-        $( "#isStacked" ).prop( "checked", false )
         const state = $( "#chooseState option:selected" ).val()
         if (state === "") {
             return // No change if default chosen
         }
-        const counties = countiesByState[state].sort()
+        const counties = (countiesByState[state] || []).sort()
+        if (!counties.length) {
+            showError(`No counties loaded for ${state}`)
+        }
         const colors = Array(counties.length).fill().map(getRandomColor)
-        refreshChart(state, allStateData, counties, dates, "cases", colors)
-        refreshChart(state, allStateData, counties, dates, "deaths", colors)
-    })
-
-    $("#isStacked").on("change", () => {
-        Object.values(charts).forEach(chart => {
-            chart.options.scales.yAxes[0].stacked = $("#isStacked").is(":checked")
-            chart.update()
-        })
+        refreshCountyChart(state, allStateData, counties, dates, "cases", colors)
+        refreshCountyChart(state, allStateData, counties, dates, "deaths", colors)
+        $(".chart").show()
     })
 
     function hideDatasets (hidden) {
@@ -67,18 +80,18 @@ function singleStateData(state, allStateData) {
     return stateData
 }
 
-function countyStats(counties, dates, stateData, statType, colors) {
+function regionStats(regions, dates, regionData, statType, colors) {
     const datasets = []
-    for (var i = 0; i < counties.length; i++) {
-        const county = counties[i]
+    for (var i = 0; i < regions.length; i++) {
+        const region = regions[i]
         const data = []
         for (const date of dates) {
-            const countyData = stateData[date][county] || {}
-            const stat = countyData[statType] || 0
+            const dayData = regionData[date][region] || {}
+            const stat = Number(dayData[statType]) || 0
             data.push(stat)
         }
         datasets.push({
-            label: county,
+            label: region,
             data: data,
             backgroundColor: colors[i],
             borderColor: colors[i],
@@ -98,14 +111,28 @@ function getRandomColor() {
     return color;
 }
 
-function refreshChart(state, allStateData, counties, dates, statType, colors) {
-    const ctx = statType
+function refreshCountyChart(state, allStateData, counties, dates, statType, colors) {
+    cleanUpCharts(statType)
+    const stateData =  singleStateData(state, allStateData)
+    const datasets = regionStats(counties, dates, stateData, statType, colors)
+    drawChart(statType, dates, datasets, `Covid19 ${statType} by county in ${state}`)
+}
+
+function refreshStateChart(allStateData, states, dates, statType, colors) {
+    cleanUpCharts(statType)
+    const datasets = regionStats(states, dates, allStateData, statType, colors)
+    drawChart(statType, dates, datasets, `State vs State Covid19 ${statType}`)
+}
+
+function cleanUpCharts(statType) {
     if (charts[statType]) {
         charts[statType].destroy()
         charts[statType] = null
     }
-    const stateData = singleStateData(state, allStateData)
-    const datasets = countyStats(counties, dates, stateData, statType, colors)
+}
+
+function drawChart(statType, dates, datasets, title) {
+    const ctx = statType
     charts[statType] = new Chart(ctx, {
         type: "line",
         data: {
@@ -115,7 +142,7 @@ function refreshChart(state, allStateData, counties, dates, statType, colors) {
         options: {
             title: {
                 display: true,
-                text: `Covid19 ${statType} by county in ${state}`
+                text: title
             },
             tooltips: {
                 mode: "point",

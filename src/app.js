@@ -13,6 +13,23 @@ const server = app.listen(port, () => {
 app.set("view engine", "pug")
 
 app.get("/", (req, res) => {
+    renderWithData(res, "index")
+})
+
+app.get("/state_vs_state", (req, res) => {
+    renderWithData(res, "svs")
+})
+
+// save template data for 5 minutes
+var cachedTemplate = null
+const cacheTimeout = 5 * 60 * 1000
+
+function renderWithData (res, templateName) {
+    if (cachedTemplate) {
+        res.render(templateName, cachedTemplate)
+        return
+    }
+
     const templateData = {}
     const statePromise = new Promise(resolve => data.states(states => {
         templateData.states = states.sort()
@@ -22,6 +39,7 @@ app.get("/", (req, res) => {
     const countyPromise = new Promise(resolve => {
         data.countiesByState(countiesByState => {
             templateData.countiesByState = countiesByState
+            console.log(`states with counties: ${Object.keys(countiesByState).length}`)
             resolve()
         })
     })
@@ -32,6 +50,12 @@ app.get("/", (req, res) => {
         resolve()
     }))
     Promise.all([statePromise, countyPromise, datePromise]).then(() => {
-        res.render("index", templateData)
+        cachedTemplate = templateData
+        setTimeout(clearCachedTemplate, cacheTimeout)
+        res.render(templateName, templateData)
     })
-})
+}
+
+function clearCachedTemplate () {
+    cachedTemplate = null
+}

@@ -1,0 +1,15 @@
+h2 State Details
+div.flex-row
+    select#chooseState.browser-default.custom-select
+        option(value="") Choose a state
+        each state in states
+            option(value=state) #{state}
+    div(class="custom-control custom-switch")
+        input#isCumulative(class="custom-control-input" type="checkbox")
+        label(class="custom-control-label" for="isCumulative") Cumulative
+    button.btn.btn-primary.btn-sm#selectAll(type="button") Select All Counties
+    button.btn.btn-primary.btn-sm#unselectAll(type="button") Unselect All Counties
+div.chart
+    canvas#cases
+div.chart        
+    canvas#deaths

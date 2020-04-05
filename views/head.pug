@@ -34,3 +34,12 @@ head
     script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js")
     //- site js
     script(src="resources/index.js")
+    script.
+        $( window ).on( "load", () => {
+            initializeCovidGraphs(
+                !{JSON.stringify(dates)}, 
+                !{JSON.stringify(countiesByState)},
+                !{JSON.stringify(allStateData)},
+                !{JSON.stringify(states)}
+            )
+        })
