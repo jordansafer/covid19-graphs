@@ -1,13 +1,15 @@
 extends default
 
 block body
-    h2 State vs State: Under Construction
+    h2 State vs State
     div.flex-row
         div(class="custom-control custom-switch")
             input#isCumulative(class="custom-control-input" type="checkbox")
             label(class="custom-control-label" for="isCumulative") Cumulative
-        button.btn.btn-primary.btn-sm#selectAll(type="button") Select All States
-        button.btn.btn-primary.btn-sm#unselectAll(type="button") Unselect All States
+        div
+            button.btn.btn-primary.btn-sm#selectAll(type="button") Select All States
+        div
+            button.btn.btn-primary.btn-sm#unselectAll(type="button") Unselect All States
     div#svs
         div.chart
             canvas#cases
