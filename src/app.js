@@ -50,7 +50,7 @@ function renderWithData (res, templateName) {
         resolve()
     }))
     Promise.all([statePromise, countyPromise, datePromise]).then(() => {
-        cachedTemplate = templateData
+        // cachedTemplate = templateData
         setTimeout(clearCachedTemplate, cacheTimeout)
         res.render(templateName, templateData)
     })

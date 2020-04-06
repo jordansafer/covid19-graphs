@@ -134,6 +134,7 @@ function cleanUpCharts(statType) {
 function drawChart(statType, dates, datasets, title) {
     const ctx = statType
     charts[statType] = new Chart(ctx, {
+        maintainAspectRatio: false,
         type: "line",
         data: {
             labels: dates,
