@@ -16,6 +16,7 @@ function initializeCovidGraphs(dates, countiesByState, allStateData, states) {
     // Create state vs state charts for SVS view
     if ( $( "#svs" ).length ) {
         $( "#isCumulative" ).prop( "checked", true )
+        $( "#isLogarithmic" ).prop( "checked", false )
         const colors = Array(states.length).fill().map(getRandomColor)
         refreshStateChart(allStateData, states, dates, "cases", colors)
         refreshStateChart(allStateData, states, dates, "deaths", colors)
@@ -68,6 +69,18 @@ function initializeCovidGraphs(dates, countiesByState, allStateData, states) {
 
     $("#isCumulative").on("change", () => {
         toggleAggregation($("#isCumulative").is(":checked"))
+    })
+
+    function toggleLogarithmic (isLogarithmic) {
+        Object.values(charts).forEach(chart => {
+            const chartType = isLogarithmic ? "logarithmic" : "linear"
+            chart.options.scales.yAxes[0].type = chartType
+            chart.update()
+        })
+    }
+
+    $("#isLogarithmic").on("change", () => {
+        toggleLogarithmic($("#isLogarithmic").is(":checked"))
     })
 }
 
